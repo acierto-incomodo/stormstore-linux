@@ -1,0 +1,13 @@
+stormstore-linux/
+│
+├ package.json
+├ main.js
+├ preload.js
+│
+├ renderer/
+│   ├ index.html
+│   ├ renderer.js
+│   └ style.css
+│
+└ build/
+   └ icon.png
