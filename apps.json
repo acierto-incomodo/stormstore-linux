@@ -1,14 +1,14 @@
 [
   {
-    "id": "stormstore",
-    "name": "StormStore",
-    "description": "Tienda de aplicaciones de StormGamesStudios",
-    "icon": "https://acierto-incomodo.github.io/StormStore/icons/stormstore.png"
+    "id": "fusionarenalauncher",
+    "name": "Fusion Arena Launcher",
+    "description": "Launcher para el juego Fusion Arena",
+    "icon": "https://acierto-incomodo.github.io/StormStore/icons/fusionarenalauncher.png"
   },
   {
-    "id": "mcsmanager",
-    "name": "MCSManager",
-    "description": "Panel para servidores Minecraft",
-    "icon": "https://acierto-incomodo.github.io/StormStore/icons/mcsmanager.png"
+    "id": "kartsmultiplayerlauncher",
+    "name": "Karts Multiplayer Launcher",
+    "description": "Launcher para el juego Karts Multiplayer",
+    "icon": "https://acierto-incomodo.github.io/StormStore/icons/kartsmultiplayerlauncher.png"
   }
 ]

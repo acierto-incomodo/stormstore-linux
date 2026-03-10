@@ -2,7 +2,7 @@
   "name": "stormstore-linux",
   "version": "1.0.0",
   "description": "StormStore Linux",
-  "author": "StormGamesStudios",
+  "author": "StormGamesStudios <meliodas.aitor@gmail.com>",
   "main": "main.js",
   "license": "",
   "scripts": {
@@ -24,6 +24,7 @@
     },
     "linux": {
       "target": ["AppImage", "deb"],
+      "artifactName": "StormStore-Linux.${ext}",
       "icon": "build/icon.png",
       "category": "Utility"
     },
