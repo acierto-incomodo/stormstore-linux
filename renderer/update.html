@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>StormStore - Actualizaciones</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1 data-i18n="updates">Actualizaciones</h1>
+        <nav>
+            <a href="index.html" data-i18n="home">Home</a> |
+            <a href="update.html" data-i18n="updates">Updates</a>
+        </nav>
+        <div class="lang">
+            <label for="langSelect" data-i18n="language">Idioma:</label>
+            <select id="langSelect">
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+                <option value="eu">EU</option>
+            </select>
+        </div>
+    </header>
+
+    <main>
+        <div class="update-container">
+            <p>Versión actual: <span id="currentVersion">?</span></p>
+            <button id="checkBtn">Buscar actualizaciones</button>
+            <button id="restartBtn" disabled>Reiniciar y aplicar</button>
+            <div id="status"></div>
+            <div class="progress-bar" id="progressBar"><div class="progress-bar-inner" id="progressInner"></div></div>
+        </div>
+    </main>
+
+    <script src="update.js"></script>
+</body>
+
+</html>

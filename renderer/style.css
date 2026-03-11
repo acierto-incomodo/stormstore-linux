@@ -1,28 +1,398 @@
-body{
-    font-family:sans-serif;
-    background:#1e1e1e;
-    color:white;
-    margin:20px;
+:root {
+    --color-primary: #0078d4;
+    --color-primary-hover: #106ebe;
+    --color-primary-active: #0d47a1;
+    --color-success: #107c10;
+    --color-danger: #d13438;
+    --color-surface: #2d2d30;
+    --color-surface-secondary: #3e3e42;
+    --color-text: #ffffff;
+    --color-text-secondary: #b4b4b4;
+    --color-border: #3e3e42;
+    --color-accent: #0078d4;
+    --radius: 8px;
+    --transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.app{
-
-    display:flex;
-    align-items:center;
-    gap:15px;
-    background:#2a2a2a;
-    padding:15px;
-    margin:10px 0;
-    border-radius:10px;
-
+* {
+    box-sizing: border-box;
 }
 
-.app img{
-    width:64px;
-    height:64px;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #1a1a1e 0%, #25252a 100%);
+    background-attachment: fixed;
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-button{
-    margin-left:auto;
-    padding:8px 16px;
+header {
+    background: rgba(30, 30, 35, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    margin-left: 40px;
+}
+
+nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+}
+
+nav a:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+}
+
+.lang {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.lang select {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.lang select:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-secondary);
+}
+
+.lang select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+main {
+    padding: 32px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+#repo {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    border-radius: var(--radius);
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+#repo:hover {
+    border-color: var(--color-accent);
+}
+
+#repo p {
+    margin: 0 0 16px 0;
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+}
+
+#apps {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 16px;
+    border-radius: var(--radius);
+    animation: fadeIn 0.3s ease;
+    transition: var(--transition);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.app:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    box-shadow: 0 8px 24px rgba(0, 120, 212, 0.2);
+    background: var(--color-surface-secondary);
+}
+
+.app-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.app img {
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.app-info {
+    flex: 1;
+}
+
+.app h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.app p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+.app-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    font-family: inherit;
+    min-height: 32px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button.install {
+    background: var(--color-accent);
+    color: white;
+    flex: 1;
+    margin-left: auto;
+}
+
+button.install:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+    border-color: var(--color-accent);
+}
+
+button.install:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+button.remove {
+    background: var(--color-danger);
+    color: white;
+    flex: 1;
+    margin-left: auto;
+}
+
+button.remove:hover:not(:disabled) {
+    background: #a4373a;
+    box-shadow: 0 2px 8px rgba(209, 52, 56, 0.3);
+    border: 1px solid var(--color-accent);
+}
+
+button.remove:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+#checkBtn {
+    background: var(--color-primary);
+    color: white;
+    width: 100%;
+}
+
+#checkBtn:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+}
+
+#checkBtn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+#restartBtn {
+    background: var(--color-primary);
+    color: white;
+    width: 100%;
+}
+
+#restartBtn:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+}
+
+#restartBtn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.update-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 28px;
+    border-radius: var(--radius);
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.update-container p {
+    color: var(--color-text-secondary);
+    margin: 0 0 16px 0;
+    font-size: 0.95rem;
+}
+
+#status {
+    padding: 12px 16px;
+    background: rgba(0, 120, 212, 0.1);
+    border: 1px solid rgba(0, 120, 212, 0.3);
+    border-radius: 4px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    animation: slideIn 0.3s ease;
+}
+
+.progress-bar {
+    width: 100%;
+    background: var(--color-border);
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 16px 0;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent), #00a4ef);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 6px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+    background-clip: content-box;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    nav {
+        margin-left: 0;
+        order: 3;
+        width: 100%;
+    }
+
+    #apps {
+        grid-template-columns: 1fr;
+    }
+
+    .app {
+        flex-direction: row;
+    }
+
+    .app-header {
+        flex: 1;
+    }
+
+    .app-actions {
+        flex-direction: column;
+    }
+
+    .app-actions button {
+        margin-left: 0;
+    }
 }
