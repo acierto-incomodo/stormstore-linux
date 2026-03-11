@@ -3,6 +3,10 @@ const { exec } = require("child_process")
 const fs = require("fs")
 const { autoUpdater } = require("electron-updater")
 
+if (process.env.APPIMAGE) {
+    app.commandLine.appendSwitch('no-sandbox')
+}
+
 let win
 
 function createWindow() {
