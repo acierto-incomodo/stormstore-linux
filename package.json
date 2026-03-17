@@ -1,6 +1,6 @@
 {
   "name": "stormstore-linux",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "StormStore Linux",
   "author": "StormGamesStudios <meliodas.aitor@gmail.com>",
   "main": "main.js",

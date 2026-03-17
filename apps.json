@@ -1,14 +1,62 @@
 [
   {
+    "id": "cardinal-ai",
+    "name": "CardinalAI",
+    "description": "AI para Cardinal",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/cardinal-ai.png"
+  },
+  {
+    "id": "cardinal-ai-dualmodel-app",
+    "name": "CardinalAI MultiModel App",
+    "description": "App para multiples modelos de AI para Cardinal",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/cardinal-ai-dualmodel-app.png"
+  },
+  {
+    "id": "clase-web",
+    "name": "Clase Web",
+    "description": "AI para el juego Cardinal",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/clase-web.png"
+  },
+  {
+    "id": "data-exporter",
+    "name": "Data Exporter",
+    "description": "Exportador de datos para el modpack MyJonCraft SGS",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/data-exporter.png"
+  },
+  {
+    "id": "dev-hub",
+    "name": "DevHub",
+    "description": "Paginas para programadores",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/dev-hub.png"
+  },
+  {
     "id": "fusionarenalauncher",
     "name": "Fusion Arena Launcher",
     "description": "Launcher para el juego Fusion Arena",
-    "icon": "https://acierto-incomodo.github.io/StormStore/icons/fusionarenalauncher.png"
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/fusion-arena.png"
   },
   {
     "id": "kartsmultiplayerlauncher",
     "name": "Karts Multiplayer Launcher",
     "description": "Launcher para el juego Karts Multiplayer",
-    "icon": "https://acierto-incomodo.github.io/StormStore/icons/kartsmultiplayerlauncher.png"
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/karts-multiplayer.png"
+  },
+  {
+    "id": "pairdrop",
+    "name": "PairDrop",
+    "description": "Compartir archivos de forma sencilla",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/pairdrop.png"
+  },
+  {
+    "id": "stormstore-linux",
+    "name": "StormStore Linux",
+    "description": "Tienda de aplicaciones para Linux",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/stormstore-linux.png"
+  },
+  {
+    "id": "whastapp-web",
+    "name": "WhatsApp Web",
+    "description": "Acceso a WhatsApp desde el navegador",
+    "icon": "https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/icons/whastapp-web.png"
   }
 ]
