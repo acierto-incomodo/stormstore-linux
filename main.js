@@ -22,12 +22,42 @@ function createWindow() {
     win.loadFile("renderer/index.html")
 }
 
-app.whenReady().then(() => {
+function runAptUpdate() {
+    return new Promise((resolve) => {
+        exec('pkexec apt update', {maxBuffer: 1024 * 1024}, (err, stdout, stderr) => {
+            if (err) {
+                console.error('apt update failed', err)
+                return resolve({success: false, error: (err && err.message) || 'unknown', stdout, stderr})
+            }
+            resolve({success: true, stdout, stderr})
+        })
+    })
+}
+
+app.whenReady().then(async () => {
 
     createWindow()
+
+    // always refresh apt package lists on startup
+    runAptUpdate().then(res => {
+        if (!res.success) {
+            console.warn('Failed to refresh apt lists on startup', res.error)
+        }
+    })
+
     // only perform update checks when the app is packaged; avoids noisy logs during development
     if (app.isPackaged) {
-        autoUpdater.checkForUpdatesAndNotify()
+        const pkg = 'stormstore-linux'
+        const candidate = await getAptCandidateVersion(pkg)
+        let shouldCheckForUpdates = true
+        if (candidate) {
+            shouldCheckForUpdates = await isVersionLess(app.getVersion(), candidate)
+        }
+        if (shouldCheckForUpdates) {
+            autoUpdater.checkForUpdatesAndNotify()
+        } else {
+            sendUpdateStatus('not-available', {message: 'version-ahead'})
+        }
     } else {
         console.log("skipping updater because app is not packaged")
         // let UI know if needed
@@ -43,6 +73,30 @@ function sendUpdateStatus(status, info) {
     }
 }
 
+function getAptCandidateVersion(pkgName) {
+    return new Promise((resolve) => {
+        exec(`apt-cache policy ${pkgName}`, (err, stdout) => {
+            if (err || !stdout) return resolve(null)
+            const match = stdout.match(/Candidate:\s*(\S+)/)
+            if (match) {
+                const ver = match[1].trim()
+                resolve(ver === '(none)' ? null : ver)
+            } else {
+                resolve(null)
+            }
+        })
+    })
+}
+
+function isVersionLess(v1, v2) {
+    return new Promise((resolve) => {
+        if (!v1 || !v2) return resolve(false)
+        exec(`dpkg --compare-versions "${v1}" lt "${v2}"`, (err) => {
+            resolve(!err)
+        })
+    })
+}
+
 autoUpdater.on('checking-for-update', () => sendUpdateStatus('checking'))
 autoUpdater.on('update-available', info => sendUpdateStatus('available', info))
 autoUpdater.on('update-not-available', info => sendUpdateStatus('not-available', info))
@@ -56,12 +110,26 @@ autoUpdater.on('update-downloaded', info => {
 })
 
 // IPC handlers for update actions
-ipcMain.handle('check-for-updates', () => {
-    if (app.isPackaged) {
-        return autoUpdater.checkForUpdates()
-    } else {
+ipcMain.handle('check-for-updates', async () => {
+    if (!app.isPackaged) {
         sendUpdateStatus('error', {message: 'updater-disabled'})
+        return
     }
+
+    // Compare against the version available in the apt repository (stormgamesstudios list)
+    const pkg = 'stormstore-linux'
+    const candidate = await getAptCandidateVersion(pkg)
+    if (candidate) {
+        const current = app.getVersion()
+        const shouldUpdate = await isVersionLess(current, candidate)
+        if (!shouldUpdate) {
+            // If current version is newer or equal to the one in the repo, do not offer updates
+            sendUpdateStatus('not-available', {message: 'version-ahead'})
+            return
+        }
+    }
+
+    return autoUpdater.checkForUpdates()
 })
 
 ipcMain.handle('restart-app', () => {
@@ -75,6 +143,12 @@ ipcMain.handle('restart-app', () => {
     } else {
         autoUpdater.quitAndInstall()
     }
+})
+
+// Refresh apt package lists
+ipcMain.handle('apt-update', async () => {
+    const result = await runAptUpdate()
+    return result
 })
 
 // provide app version

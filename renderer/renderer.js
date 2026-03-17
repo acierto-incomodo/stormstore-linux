@@ -1,5 +1,6 @@
 const repoDiv = document.getElementById("repo")
 const appsDiv = document.getElementById("apps")
+const refreshListsBtn = document.getElementById('refreshListsBtn')
 
 let lang = localStorage.getItem('lang') || 'es'
 const translations = {
@@ -12,7 +13,8 @@ const translations = {
         installRepo: 'Instalar repositorio',
         removeRepo: 'Eliminar repositorio',
         install: 'Instalar',
-        remove: 'Eliminar'
+        remove: 'Eliminar',
+        refreshLists: 'Actualizar listas'
     },
     en: {
         title: 'StormStore',
@@ -23,7 +25,8 @@ const translations = {
         installRepo: 'Install repository',
         removeRepo: 'Remove repository',
         install: 'Install',
-        remove: 'Remove'
+        remove: 'Remove',
+        refreshLists: 'Refresh lists'
     },
     eu: {
         title: 'StormStore',
@@ -34,7 +37,8 @@ const translations = {
         installRepo: 'Biltegia instalatu',
         removeRepo: 'Biltegia ezabatu',
         install: 'Instalatu',
-        remove: 'Kendu'
+        remove: 'Kendu',
+        refreshLists: 'Zerrendak eguneratu'
     }
 }
 function t(key){
@@ -45,6 +49,8 @@ function applyTranslations(){
         const key = el.getAttribute('data-i18n')
         el.textContent = t(key)
     })
+
+    if (refreshListsBtn) refreshListsBtn.textContent = t('refreshLists')
 }
 function setupLanguageSelector(){
     const sel = document.getElementById('langSelect')
@@ -99,6 +105,9 @@ async function init(){
     applyTranslations()
     setupLanguageSelector()
 
+    // Refresh apt package lists (this will prompt for credentials via pkexec)
+    window.storm.updateAptLists().catch(() => {})
+
     let repo = await window.storm.repoStatus()
 
     if(!repo){
@@ -131,7 +140,6 @@ async function init(){
 }
 
 async function loadApps(){
-
     const res = await fetch("https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/apps.json")
     const apps = await res.json()
     appsDiv.innerHTML = ""
@@ -161,66 +169,11 @@ async function loadApps(){
     }
 }
 
-async function loadApps(){
-
-    const res = await fetch("https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/apps.json")
-    const apps = await res.json()
-    appsDiv.innerHTML = ""
-    for(const app of apps){
-        const installed = await window.storm.isInstalled(app.id)
-        const el = document.createElement("div")
-        el.className = "app"
-        el.innerHTML = `
-        <img src="${app.icon}">
-        <h3>${app.name}</h3>
-        <p>${app.description}</p>
-        <button class="${installed ? 'remove' : 'install'}">${installed ? "Eliminar" : "Instalar"}</button>
-        `
-        const btn = el.querySelector("button")
-        btn.onclick = async () => {
-            if(installed) await window.storm.removeApp(app.id)
-            else await window.storm.installApp(app.id)
-            loadApps() // refresh buttons after operation
-        }
-        appsDiv.appendChild(el)
-    }
-}
-
-async function loadApps(){
-
-    const res = await fetch("https://raw.githubusercontent.com/acierto-incomodo/stormstore-linux/main/apps.json")
-
-    const apps = await res.json()
-
-    appsDiv.innerHTML = ""
-
-    for(const app of apps){
-
-        const installed = await window.storm.isInstalled(app.id)
-
-        const el = document.createElement("div")
-
-        el.className = "app"
-
-        el.innerHTML = `
-        <img src="${app.icon}">
-        <h3>${app.name}</h3>
-        <p>${app.description}</p>
-        <button>${installed ? "Eliminar" : "Instalar"}</button>
-        `
-
-        const btn = el.querySelector("button")
-
-        btn.onclick = () => {
-
-            if(installed)
-                window.storm.removeApp(app.id)
-            else
-                window.storm.installApp(app.id)
-
-        }
-
-        appsDiv.appendChild(el)
+if (refreshListsBtn) {
+    refreshListsBtn.onclick = async () => {
+        refreshListsBtn.disabled = true
+        await window.storm.updateAptLists().catch(() => {})
+        refreshListsBtn.disabled = false
     }
 }
 

@@ -22,6 +22,9 @@ contextBridge.exposeInMainWorld("storm", {
     getVersion: () => ipcRenderer.invoke('get-version'),
 
     // system accent color
-    getAccentColor: () => ipcRenderer.invoke('get-accent-color')
+    getAccentColor: () => ipcRenderer.invoke('get-accent-color'),
+
+    // Refresh apt package lists
+    updateAptLists: () => ipcRenderer.invoke('apt-update')
 
 })
