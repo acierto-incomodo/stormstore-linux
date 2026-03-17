@@ -8,6 +8,35 @@ if (process.env.APPIMAGE) {
 }
 
 let win
+let sudoKeepAliveInterval = null
+
+function ensureSudoCredentials() {
+    return new Promise((resolve) => {
+        // This will prompt once for sudo password and cache it for a short time.
+        exec('sudo -v', (err) => {
+            if (err) {
+                console.warn('Could not acquire sudo credentials', err)
+                return resolve(false)
+            }
+            resolve(true)
+        })
+    })
+}
+
+function startSudoKeepAlive() {
+    if (sudoKeepAliveInterval) return
+    // Refresh cached sudo timestamp every 4 minutes so we don't keep prompting.
+    sudoKeepAliveInterval = setInterval(() => {
+        exec('sudo -v', () => { /* ignore */ })
+    }, 4 * 60 * 1000)
+}
+
+function stopSudoKeepAlive() {
+    if (sudoKeepAliveInterval) {
+        clearInterval(sudoKeepAliveInterval)
+        sudoKeepAliveInterval = null
+    }
+}
 
 function createWindow() {
 
@@ -24,7 +53,7 @@ function createWindow() {
 
 function runAptUpdate() {
     return new Promise((resolve) => {
-        exec('pkexec apt update', {maxBuffer: 1024 * 1024}, (err, stdout, stderr) => {
+        exec('sudo apt update', {maxBuffer: 1024 * 1024}, (err, stdout, stderr) => {
             if (err) {
                 console.error('apt update failed', err)
                 return resolve({success: false, error: (err && err.message) || 'unknown', stdout, stderr})
@@ -35,6 +64,10 @@ function runAptUpdate() {
 }
 
 app.whenReady().then(async () => {
+    // Ask once for elevated permissions so later operations can reuse the cached sudo timestamp.
+    await ensureSudoCredentials().then((ok) => {
+        if (ok) startSudoKeepAlive()
+    })
 
     createWindow()
 
@@ -63,6 +96,10 @@ app.whenReady().then(async () => {
         // let UI know if needed
         sendUpdateStatus('error', {message: 'updater-disabled'})
     }
+
+    app.on('will-quit', () => {
+        stopSudoKeepAlive()
+    })
 
 })
 
@@ -135,8 +172,8 @@ ipcMain.handle('check-for-updates', async () => {
 ipcMain.handle('restart-app', () => {
     // default installer behavior
     if (downloadedFilePath && process.platform === 'linux' && downloadedFilePath.endsWith('.deb')) {
-        // install deb with privilege escalation
-        exec(`pkexec dpkg -i "${downloadedFilePath}"`, (err) => {
+        // install deb using sudo (credentials should already be cached)
+        exec(`sudo dpkg -i "${downloadedFilePath}"`, (err) => {
             if (err) console.error('Deb install failed', err)
             app.quit()
         })
@@ -199,27 +236,20 @@ ipcMain.handle("repo-status", () => {
 })
 
 ipcMain.handle("install-repo", () => {
-
-    exec("curl -fsSL https://raw.githubusercontent.com/acierto-incomodo/StormStore/main/install.sh | pkexec bash")
-
+    // Use sudo so we can reuse cached credentials and avoid repeated prompts
+    exec('sudo bash -c "curl -fsSL https://raw.githubusercontent.com/acierto-incomodo/StormStore/main/install.sh | bash"')
 })
 
 ipcMain.handle("remove-repo", () => {
-
-    exec("curl -fsSL https://raw.githubusercontent.com/acierto-incomodo/StormStore/main/remove.sh | pkexec bash")
-
+    exec('sudo bash -c "curl -fsSL https://raw.githubusercontent.com/acierto-incomodo/StormStore/main/remove.sh | bash"')
 })
 
 ipcMain.handle("install-app", (event, pkg) => {
-
-    exec(`pkexec apt install -y ${pkg}`)
-
+    exec(`sudo apt install -y ${pkg}`)
 })
 
 ipcMain.handle("remove-app", (event, pkg) => {
-
-    exec(`pkexec apt remove -y ${pkg}`)
-
+    exec(`sudo apt remove -y ${pkg}`)
 })
 
 ipcMain.handle("is-installed", (event, pkg) => {
