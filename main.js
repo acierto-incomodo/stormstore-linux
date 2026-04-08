@@ -50,13 +50,17 @@ ipcMain.handle('update-list', async () => {
 // Listar paquetes del repo
 ipcMain.handle('list-packages', async () => {
   return new Promise((resolve) => {
-    exec('apt-cache search .', (err, stdout, stderr) => {
+    exec('apt list 2>/dev/null', (err, stdout, stderr) => {
       if(err) resolve({ success: false, message: stderr, packages: [] });
       else {
-        const packages = stdout.split('\n').map(line => {
-          const [pkg, ...desc] = line.split(' - ');
-          return { name: pkg, description: desc.join(' -') };
-        }).filter(p => p.name);
+        const packages = stdout.split('\n')
+          .slice(1)
+          .map(line => {
+            const [pkgFull] = line.split(' ');
+            const pkg = pkgFull.split('/')[0];
+            return { name: pkg, description: '' }; // sin descripción
+          })
+          .filter(p => p.name);
         resolve({ success: true, packages });
       }
     });
