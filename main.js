@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const path = require('path');
 const log = require('electron-log');
+const { spawn } = require('child_process');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -72,25 +73,23 @@ ipcMain.handle('update-list', async () => {
 
 // Listar paquetes disponibles sin sudo
 ipcMain.handle('list-packages', async () => {
-  log.info(`Listando paquetes disponibles`);
   return new Promise((resolve) => {
-    // Ruta completa a apt para evitar problemas de PATH
-    exec('/usr/bin/apt list 2>/dev/null', (err, stdout, stderr) => {
-      if(err){
-        log.error(`Error listando paquetes: ${stderr || err}`);
-        resolve({ success: false, message: stderr || err.toString(), packages: [] });
-      } else {
-        log.info(`Paquetes listados correctamente`);
-        const packages = stdout.split('\n')
-          .slice(1) // Quita "Listing..."
-          .map(line => {
-            const [pkgFull] = line.split(' ');
-            const pkg = pkgFull.split('/')[0];
-            return { name: pkg, description: '' }; // apt list no da descripción
-          })
-          .filter(p => p.name);
-        resolve({ success: true, packages });
-      }
+    const apt = spawn('/usr/bin/apt', ['list']);
+    let output = '';
+
+    apt.stdout.on('data', (data) => { output += data.toString(); });
+    apt.stderr.on('data', (data) => { /* ignorar o logear errores */ });
+    
+    apt.on('close', () => {
+      const packages = output.split('\n')
+        .slice(1)
+        .map(line => {
+          const [pkgFull] = line.split(' ');
+          const pkg = pkgFull.split('/')[0];
+          return { name: pkg, description: '' };
+        })
+        .filter(p => p.name);
+      resolve({ success: true, packages });
     });
   });
 });
