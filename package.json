@@ -9,7 +9,9 @@
     "start": "electron .",
     "dist": "electron-builder"
   },
-  "dependencies": {},
+  "dependencies": {
+    "electron-log": "^5.4.3"
+  },
   "devDependencies": {
     "electron": "^41.2.0",
     "electron-builder": "^26.8.1"
@@ -18,7 +20,10 @@
     "appId": "com.stormgames.stormstore",
     "productName": "StormStore",
     "linux": {
-      "target": ["deb", "AppImage"],
+      "target": [
+        "deb",
+        "AppImage"
+      ],
       "category": "Utility"
     }
   }
