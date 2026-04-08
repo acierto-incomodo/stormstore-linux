@@ -3,7 +3,9 @@ const updateBtn = document.getElementById('updateBtn');
 
 async function loadApps() {
   appsContainer.innerHTML = '<p>Cargando aplicaciones...</p>';
-  await window.api.updateList();
+
+  // Actualizar índice APT opcional
+  // await window.api.updateList();
 
   const res = await window.api.listPackages();
   if(!res.success) {
