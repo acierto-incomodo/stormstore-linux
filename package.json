@@ -19,11 +19,15 @@
   "build": {
     "appId": "com.stormgames.stormstore",
     "productName": "StormStore",
+    "directories": {
+      "buildResources": "assets"
+    },
     "linux": {
       "target": [
         "deb",
         "AppImage"
       ],
+      "icon": "icons/stormstore-linux.png",
       "category": "Utility"
     }
   }
