@@ -1,44 +1,25 @@
 {
-  "name": "stormstore-linux",
-  "version": "1.1.1",
-  "description": "StormStore Linux",
-  "author": "StormGamesStudios <meliodas.aitor@gmail.com>",
+  "name": "stormstore",
+  "version": "1.0.0",
+  "description": "Tienda de aplicaciones APT estilo Discover",
   "main": "main.js",
+  "author": "StormGamesStudios <meliodas.aitor@gmail.com>",
   "license": "",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --linux"
+    "dist": "electron-builder"
   },
+  "dependencies": {},
   "devDependencies": {
-    "electron": "^40.8.0",
+    "electron": "^41.2.0",
     "electron-builder": "^26.8.1"
   },
-  "dependencies": {
-    "electron-updater": "^6.8.3"
-  },
   "build": {
-    "appId": "com.stormgamesstudios.stormstore",
+    "appId": "com.stormgames.stormstore",
     "productName": "StormStore",
-    "files": [
-      "index.html",
-      "main.js",
-      "renderer.js",
-      "renderer/**/*",
-      "build/**/*"
-    ],
-    "directories": {
-      "buildResources": "build"
-    },
     "linux": {
-      "target": ["AppImage", "deb"],
-      "artifactName": "StormStore-Linux.${ext}",
-      "icon": "./build/icon.png",
+      "target": ["deb", "AppImage"],
       "category": "Utility"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "acierto-incomodo",
-      "repo": "stormstore-linux"
     }
   }
 }
